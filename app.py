@@ -1,52 +1,39 @@
 import streamlit as st
-
 import os
 import subprocess
 
+# Fix OpenCV issue
 os.environ["OPENCV_VIDEOIO_PRIORITY_MSMF"] = "0"
 
-# Remove GUI OpenCV if installed (prevents libGL error)
 try:
     subprocess.run(["pip", "uninstall", "-y", "opencv-python"])
 except:
     pass
 
-# Now import YOLO
 from ultralytics import YOLO
 from PIL import Image
 import tempfile
+import requests
 
-# App UI
 st.set_page_config(page_title="Mango Tree Counter", page_icon="🌳")
 
 st.title("🌳 Mango Tree Detection & Counting")
 
 MODEL_PATH = "best.pt"
 
-# 🔥 DOWNLOAD MODEL FROM GOOGLE DRIVE
+# Download model
 if not os.path.exists(MODEL_PATH):
     st.info("⬇️ Downloading model...")
 
-    url = "https://drive.google.com/uc?id=1FoK4Y8IlU"
-    import gdown
-   import requests
+    file_id = "1Fok4Y8IIU"  # your file id
+    url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
-if not os.path.exists(MODEL_PATH):
-    st.info("⬇️ Downloading model...")
-
-    file_id = "1Fok4Y8IIU"  # your ID
-
-    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
-
-    response = requests.get(download_url)
+    response = requests.get(url)
 
     with open(MODEL_PATH, "wb") as f:
         f.write(response.content)
 
     st.success("✅ Model downloaded!")
-
-    st.success("✅ Model downloaded!")
-
 
 # Load model
 @st.cache_resource
