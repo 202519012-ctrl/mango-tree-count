@@ -27,10 +27,23 @@ MODEL_PATH = "best.pt"
 if not os.path.exists(MODEL_PATH):
     st.info("⬇️ Downloading model...")
 
-    # 👉 REPLACE THIS WITH YOUR FILE ID
     url = "https://drive.google.com/uc?id=1FoK4Y8IlU"
     import gdown
-    gdown.download(url, MODEL_PATH, quiet=False)
+   import requests
+
+if not os.path.exists(MODEL_PATH):
+    st.info("⬇️ Downloading model...")
+
+    file_id = "1Fok4Y8IIU"  # your ID
+
+    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+    response = requests.get(download_url)
+
+    with open(MODEL_PATH, "wb") as f:
+        f.write(response.content)
+
+    st.success("✅ Model downloaded!")
 
     st.success("✅ Model downloaded!")
 
