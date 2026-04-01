@@ -2,13 +2,16 @@ import streamlit as st
 import os
 import subprocess
 
-# Fix OpenCV issue
+import os
+import subprocess
+
 os.environ["OPENCV_VIDEOIO_PRIORITY_MSMF"] = "0"
 
-try:
-    subprocess.run(["pip", "uninstall", "-y", "opencv-python"])
-except:
-    pass
+# 🔥 FORCE REMOVE WRONG OPENCV
+subprocess.run("pip uninstall -y opencv-python opencv-python-headless", shell=True)
+
+# 🔥 INSTALL CORRECT ONE
+subprocess.run("pip install opencv-python-headless==4.8.1.78", shell=True)
 
 from ultralytics import YOLO
 from PIL import Image
