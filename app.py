@@ -15,6 +15,16 @@ from PIL import Image
 import tempfile
 import requests
 
+import torch
+torch.serialization.add_safe_globals({})
+
+@st.cache_resource
+def load_model():
+    try:
+        return YOLO(MODEL_PATH)
+    except:
+        return YOLO(MODEL_PATH, task="detect")
+
 st.set_page_config(page_title="Mango Tree Counter", page_icon="🌳")
 
 st.title("🌳 Mango Tree Detection & Counting")
@@ -38,7 +48,11 @@ if not os.path.exists(MODEL_PATH):
 # Load model
 @st.cache_resource
 def load_model():
-    return YOLO(MODEL_PATH)
+    try:
+        return YOLO(MODEL_PATH)
+    except Exception as e:
+        st.error("⚠️ Model loading failed. Retrying with safe mode...")
+        return YOLO(MODEL_PATH, task="detect")
 
 model = load_model()
 
